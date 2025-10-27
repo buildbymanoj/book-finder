@@ -1,0 +1,49 @@
+/**
+ * App Component Styles
+ */
+
+.App {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  padding-top: 80px;
+  padding-bottom: 40px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--light-bg);
+}
+
+/* Toast Customization */
+.Toastify__toast {
+  border-radius: var(--radius);
+  font-family: 'Inter', sans-serif;
+}
+
+.Toastify__toast--success {
+  background-color: var(--secondary-color);
+}
+
+.Toastify__toast--error {
+  background-color: var(--danger-color);
+}
+
+.Toastify__toast--warning {
+  background-color: var(--warning-color);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding-top: 70px;
+    padding-bottom: 30px;
+  }
+}
