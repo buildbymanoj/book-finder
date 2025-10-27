@@ -17,22 +17,31 @@ export const register = async (userData) => {
     localStorage.setItem('token', response.data.data.token);
   }
   
-  return response.data.data;
+  return {
+    ...response.data.data,
+    message: response.data.message
+  };
 };
 
 /**
  * Login user
- * @param {Object} credentials - Email and password
+ * @param {Object} credentials - Email/username and password
  * @returns {Promise} User data with token
  */
 export const login = async (credentials) => {
-  const response = await api.post('/auth/login', credentials);
+  const response = await api.post('/auth/login', {
+    identifier: credentials.identifier,
+    password: credentials.password
+  });
   
   if (response.data.success && response.data.data.token) {
     localStorage.setItem('token', response.data.data.token);
   }
   
-  return response.data.data;
+  return {
+    ...response.data.data,
+    message: response.data.message
+  };
 };
 
 /**

@@ -13,8 +13,8 @@ import './BookCard.css';
 const BookCard = ({ book, isSaved, onSave, onRemove }) => {
   const [loading, setLoading] = useState(false);
 
-  // Default placeholder image
-  const placeholderImage = 'https://via.placeholder.com/150x220/e5e7eb/6b7280?text=No+Cover';
+  // Default placeholder image (SVG)
+  const placeholderImage = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='220' viewBox='0 0 150 220' fill='none'%3E%3Crect width='150' height='220' fill='%23E0E0E0'/%3E%3Cpath d='M30 50h90v120H30z' fill='%23CCCCCC'/%3E%3Cpath d='M45 70h60v20h-60zM45 100h60v10h-60zM45 115h45v10h-45z' fill='%23AAAAAA'/%3E%3Ctext x='75' y='180' text-anchor='middle' fill='%23666' font-family='Arial' font-size='12'%3ENo Cover%3C/text%3E%3C/svg%3E";
 
   const handleAction = async () => {
     setLoading(true);
@@ -44,7 +44,7 @@ const BookCard = ({ book, isSaved, onSave, onRemove }) => {
             e.target.src = placeholderImage;
           }}
         />
-        <div className="book-overlay">
+        {/* <div className="book-overlay">
           <Link 
             to={`/book/${book.id}`} 
             className="view-details-btn"
@@ -52,7 +52,7 @@ const BookCard = ({ book, isSaved, onSave, onRemove }) => {
           >
             <FiExternalLink /> View Details
           </Link>
-        </div>
+        </div> */}
       </div>
 
       {/* Book Info */}

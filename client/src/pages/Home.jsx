@@ -143,10 +143,10 @@ const Home = () => {
       {!loading && searched && books.length > 0 && (
         <>
           <div className="results-header">
-            <h2>Search Results ({books.length})</h2>
+            <h2>Search Results ({books.length > 6 ? 6 : books.length})</h2>
           </div>
           <div className="books-grid">
-            {books.map((book) => (
+            {books.slice(0, 6).map((book) => (
               <BookCard
                 key={book.id}
                 book={book}
@@ -163,13 +163,13 @@ const Home = () => {
         <div className="welcome-section">
           <div className="welcome-content">
             <h2>Welcome to Book Finder! 📚</h2>
-            <p>Discover books in multiple ways:</p>
+            {/* <p>Discover books in multiple ways:</p>
             <ul>
               <li><strong>Search by text:</strong> Book title, author name, ISBN, or keywords</li>
               <li><strong>Browse by genre:</strong> Select a genre from filters to explore books</li>
               <li><strong>Filter by year:</strong> Find books published in a specific year range</li>
               <li><strong>Combine both:</strong> Search with filters for precise results</li>
-            </ul>
+            </ul> */}
             <p className="tip">💡 <strong>Quick Start:</strong> Use the filters below to browse books by genre without searching!</p>
           </div>
 

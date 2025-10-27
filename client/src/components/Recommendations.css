@@ -13,11 +13,26 @@
   margin-bottom: 1.5rem;
 }
 
+
 .recommendations-header h2 {
   margin: 0;
   font-size: 1.75rem;
   font-weight: 700;
-  color: var(--text-primary);
+  color: #fff !important;
+}
+
+.recommendations-subtitle {
+  margin: -0.75rem 0 1.5rem;
+  color: #fff !important;
+  font-size: 0.9375rem;
+  font-style: italic;
+}
+
+.recommendations-subtitle {
+  margin: -0.75rem 0 1.5rem;
+  color: var(--text-secondary);
+  font-size: 0.9375rem;
+  font-style: italic;
 }
 
 .refresh-btn {
@@ -145,7 +160,19 @@
   gap: 1.5rem;
 }
 
+.books-grid-compact {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
 /* Responsive */
+@media (max-width: 1200px) {
+  .books-grid-compact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .recommendations-header {
     flex-direction: column;
@@ -156,6 +183,10 @@
   .books-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 1rem;
+  }
+
+  .books-grid-compact {
+    grid-template-columns: 1fr;
   }
 }
 

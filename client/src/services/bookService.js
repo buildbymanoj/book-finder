@@ -6,6 +6,19 @@
 import api from './api';
 
 /**
+ * Get book suggestions for autocomplete
+ * @param {String} query - Partial search query
+ * @param {Number} limit - Maximum number of suggestions
+ * @returns {Promise} Array of book suggestions
+ */
+export const getBookSuggestions = async (query, limit = 5) => {
+  const response = await api.get('/books/suggestions', {
+    params: { q: query, limit }
+  });
+  return response.data.data;
+};
+
+/**
  * Search books using Open Library API with filtering
  * @param {String} query - Search query
  * @param {Object} filters - { genre, yearFrom, yearTo, page, limit }

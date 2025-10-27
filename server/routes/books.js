@@ -11,6 +11,62 @@ const SearchHistory = require('../models/SearchHistory');
 const { protect } = require('../middleware/auth');
 
 /**
+ * @route   GET /api/books/suggestions
+ * @desc    Get book suggestions for autocomplete
+ * @access  Private
+ */
+router.get('/suggestions', protect, async (req, res, next) => {
+  try {
+    const { q, limit = 5 } = req.query;
+
+    if (!q || q.trim().length < 2) {
+      return res.json({
+        success: true,
+        data: []
+      });
+    }
+
+    const searchQuery = q.trim();
+
+    // Call Open Library Search API for suggestions
+    const response = await axios.get(
+      `${process.env.OPEN_LIBRARY_API}/search.json`,
+      {
+        params: {
+          q: searchQuery,
+          limit: parseInt(limit),
+          fields: 'key,title,author_name,first_publish_year,cover_i'
+        },
+        timeout: 10000 // Shorter timeout for suggestions
+      }
+    );
+
+    // Format the results for suggestions
+    const suggestions = response.data.docs.map(book => ({
+      id: book.key,
+      title: book.title || 'Unknown Title',
+      author: book.author_name ? book.author_name[0] : 'Unknown Author',
+      publishYear: book.first_publish_year || null,
+      coverUrl: book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-S.jpg`
+        : null
+    }));
+
+    res.json({
+      success: true,
+      data: suggestions
+    });
+  } catch (error) {
+    console.error('Suggestions error:', error.message);
+    // Return empty array on error to avoid breaking the UI
+    res.json({
+      success: true,
+      data: []
+    });
+  }
+});
+
+/**
  * @route   GET /api/books/search
  * @desc    Search books using Open Library API with filtering
  * @access  Private

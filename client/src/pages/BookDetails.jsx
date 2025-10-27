@@ -93,7 +93,7 @@ const BookDetails = () => {
 
   const coverUrl = book.covers?.[0] 
     ? `https://covers.openlibrary.org/b/id/${book.covers[0]}-L.jpg`
-    : 'https://via.placeholder.com/300x450/e5e7eb/6b7280?text=No+Cover';
+    : "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450' viewBox='0 0 300 450' fill='none'%3E%3Crect width='300' height='450' fill='%23E0E0E0'/%3E%3Cpath d='M60 100h180v240H60z' fill='%23CCCCCC'/%3E%3Cpath d='M90 140h120v40h-120zM90 200h120v20h-120zM90 230h90v20h-90z' fill='%23AAAAAA'/%3E%3Ctext x='150' y='360' text-anchor='middle' fill='%23666' font-family='Arial' font-size='24'%3ENo Cover%3C/text%3E%3C/svg%3E";
 
   return (
     <div className="container book-details-page">
@@ -106,7 +106,14 @@ const BookDetails = () => {
         {/* Book Main Info */}
         <div className="book-main-section">
           <div className="book-cover-section">
-            <img src={coverUrl} alt={book.title} className="book-cover-large" />
+            <img 
+              src={coverUrl} 
+              alt={book.title} 
+              className="book-cover-large"
+              onError={(e) => {
+                e.target.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450' viewBox='0 0 300 450' fill='none'%3E%3Crect width='300' height='450' fill='%23E0E0E0'/%3E%3Cpath d='M60 100h180v240H60z' fill='%23CCCCCC'/%3E%3Cpath d='M90 140h120v40h-120zM90 200h120v20h-120zM90 230h90v20h-90z' fill='%23AAAAAA'/%3E%3Ctext x='150' y='360' text-anchor='middle' fill='%23666' font-family='Arial' font-size='24'%3ENo Cover%3C/text%3E%3C/svg%3E";
+              }}
+            />
             <div className="cover-actions">
               <button
                 onClick={handleSave}

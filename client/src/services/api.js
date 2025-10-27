@@ -33,10 +33,19 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // Unauthorized - clear token and redirect to login
-      localStorage.removeItem('token');
-      window.location.href = '/login';
+    const status = error.response?.status;
+    if (status === 401) {
+      const token = localStorage.getItem('token');
+      const requestUrl = error.config?.url || '';
+      const isAuthRoute = requestUrl.includes('/auth/login') || requestUrl.includes('/auth/register');
+
+      if (token && !isAuthRoute) {
+        // Only force logout if we actually have a token and it's not the login/register flow
+        localStorage.removeItem('token');
+        if (!window.location.pathname.includes('/login')) {
+          window.location.href = '/login';
+        }
+      }
     }
     return Promise.reject(error);
   }

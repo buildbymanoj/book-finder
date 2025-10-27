@@ -12,6 +12,11 @@
   margin-bottom: 3rem;
 }
 
+.home-header .page-title,
+.home-header .page-subtitle {
+  color: #fff !important;
+}
+
 .page-title {
   font-size: 2.5rem;
   font-weight: 700;
@@ -37,7 +42,7 @@
 .results-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #fff !important;
 }
 
 .loading-state,
@@ -122,7 +127,7 @@
 
 .books-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   margin-top: 2rem;
 }
@@ -142,7 +147,7 @@
   }
 
   .books-grid {
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1.5rem;
   }
 }

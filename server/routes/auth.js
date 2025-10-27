@@ -29,30 +29,46 @@ const generateToken = (id) => {
 router.post('/register', [
   body('username').trim().isLength({ min: 3, max: 30 }),
   body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 })
+  body('password').isLength({ min: 8 })
 ], async (req, res, next) => {
   try {
     // Validate input
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      const firstError = errors.array()[0];
+      let message = 'Validation failed';
+      
+      if (firstError.path === 'password') {
+        message = 'Password must be at least 8 characters';
+      } else if (firstError.path === 'email') {
+        message = 'Please enter a valid email address';
+      } else if (firstError.path === 'username') {
+        message = 'Username must be between 3 and 30 characters';
+      }
+      
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array()
+        message: message
       });
     }
 
     const { username, email, password } = req.body;
 
-    // Check if user already exists
-    const userExists = await User.findOne({
-      $or: [{ email }, { username }]
-    });
-
-    if (userExists) {
+    // Check if email already exists
+    const emailExists = await User.findOne({ email });
+    if (emailExists) {
       return res.status(400).json({
         success: false,
-        message: 'User already exists with this email or username'
+        message: 'Email already exists'
+      });
+    }
+
+    // Check if username already exists
+    const usernameExists = await User.findOne({ username });
+    if (usernameExists) {
+      return res.status(400).json({
+        success: false,
+        message: 'Username already exists'
       });
     }
 
@@ -66,6 +82,7 @@ router.post('/register', [
     // Return user info and token
     res.status(201).json({
       success: true,
+      message: 'Registration successful! Welcome to Book Finder!',
       data: {
         id: user._id,
         username: user.username,
@@ -84,8 +101,8 @@ router.post('/register', [
  * @access  Public
  */
 router.post('/login', [
-  body('email').isEmail().normalizeEmail(),
-  body('password').notEmpty()
+  body('identifier').notEmpty().withMessage('Email or username is required'),
+  body('password').notEmpty().withMessage('Password is required')
 ], async (req, res, next) => {
   try {
     // Validate input
@@ -93,20 +110,21 @@ router.post('/login', [
     if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: 'Validation failed',
-        errors: errors.array()
+        message: errors.array()[0].msg
       });
     }
 
-    const { email, password } = req.body;
+    const { identifier, password } = req.body;
 
-    // Find user and include password
-    const user = await User.findOne({ email }).select('+password');
+    // Find user by email or username
+    const user = await User.findOne({
+      $or: [{ email: identifier }, { username: identifier }]
+    }).select('+password');
 
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Incorrect username or email'
       });
     }
 
@@ -116,13 +134,14 @@ router.post('/login', [
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: 'Invalid credentials'
+        message: 'Incorrect password'
       });
     }
 
     // Return user info and token
     res.json({
       success: true,
+      message: 'Login successful! Welcome back!',
       data: {
         id: user._id,
         username: user.username,

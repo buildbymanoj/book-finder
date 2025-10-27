@@ -23,6 +23,14 @@ const Navbar = () => {
     navigate('/login');
   };
 
+  // User menu dropdown state
+  const [showDropdown, setShowDropdown] = React.useState(false);
+  const handleUserMenuClick = () => setShowDropdown((prev) => !prev);
+  const handleDropdownLogout = () => {
+    setShowDropdown(false);
+    handleLogout();
+  };
+
   return (
     <nav className="navbar">
       <div className="container navbar-container">
@@ -64,13 +72,31 @@ const Navbar = () => {
           </button>
 
           {user ? (
-            <>
-              <span className="user-welcome">Hello, {user.username}</span>
-              <button onClick={handleLogout} className="btn btn-logout">
-                <FiLogOut className="btn-icon" />
-                Logout
+            <div className="user-menu-wrapper">
+              <button
+                className="user-avatar-btn"
+                onClick={handleUserMenuClick}
+                aria-label="User menu"
+              >
+                {/* Simple user avatar icon, can be replaced with an image */}
+                <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+                  <circle cx="16" cy="16" r="16" fill="#BB86FC" />
+                  <circle cx="16" cy="13" r="6" fill="#E0E0E0" />
+                  <ellipse cx="16" cy="25" rx="8" ry="5" fill="#E0E0E0" />
+                </svg>
               </button>
-            </>
+              {showDropdown && (
+                <div className="user-dropdown">
+                  <div className="user-info">
+                    <div className="user-name">{user.username}</div>
+                    <div className="user-email">{user.email}</div>
+                  </div>
+                  <button onClick={handleDropdownLogout} className="btn btn-logout">
+                    <FiLogOut className="btn-icon" /> Logout
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
             <>
               <Link to="/login" className="btn btn-secondary">Login</Link>

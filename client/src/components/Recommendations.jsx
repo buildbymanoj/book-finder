@@ -1,42 +1,72 @@
 /**
  * Recommendations Component
- * Display personalized book recommendations
+ * Display curated classic books
  */
 
 import React, { useState, useEffect } from 'react';
-import { FiTrendingUp, FiRefreshCw } from 'react-icons/fi';
-import { getRecommendations, getTrendingBooks } from '../services/recommendationService';
+import { FiRefreshCw } from 'react-icons/fi';
 import BookCard from './BookCard';
-import { addToReadingList, getSavedBooks, removeByOpenLibraryId } from '../services/bookService';
+import { addToReadingList, getSavedBooks, removeByOpenLibraryId, searchBooks } from '../services/bookService';
 import './Recommendations.css';
 
+// Curated list of classic/best books of all time
+const CLASSIC_BOOKS_QUERIES = [
+  'To Kill a Mockingbird Harper Lee',
+  '1984 George Orwell',
+  'Pride and Prejudice Jane Austen',
+  'The Great Gatsby F. Scott Fitzgerald',
+  'One Hundred Years of Solitude',
+  'The Catcher in the Rye',
+  'Lord of the Rings',
+  'Harry Potter',
+  'The Hobbit Tolkien',
+  'Jane Eyre Charlotte Bronte',
+  'Wuthering Heights',
+  'Moby Dick Herman Melville',
+  'The Odyssey Homer',
+  'Crime and Punishment Dostoevsky',
+  'The Brothers Karamazov',
+  'War and Peace Tolstoy',
+  'Anna Karenina',
+  'Brave New World Aldous Huxley',
+  'Animal Farm George Orwell',
+  'Fahrenheit 451 Ray Bradbury'
+];
+
 const Recommendations = () => {
-  const [recommendations, setRecommendations] = useState([]);
-  const [trending, setTrending] = useState([]);
+  const [books, setBooks] = useState([]);
   const [savedBooks, setSavedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [basedOn, setBasedOn] = useState(null);
-  const [activeTab, setActiveTab] = useState('personalized');
 
   useEffect(() => {
-    loadData();
+    loadClassicBooks();
   }, []);
 
-  const loadData = async () => {
+  const getRandomBooks = () => {
+    // Shuffle and pick 4 random classic books
+    const shuffled = [...CLASSIC_BOOKS_QUERIES].sort(() => Math.random() - 0.5);
+    return shuffled.slice(0, 4);
+  };
+
+  const loadClassicBooks = async () => {
     setLoading(true);
     try {
-      const [recsData, trendingData, saved] = await Promise.all([
-        getRecommendations(),
-        getTrendingBooks(),
-        getSavedBooks()
-      ]);
-
-      setRecommendations(recsData.data);
-      setBasedOn(recsData.basedOn);
-      setTrending(trendingData);
+      const saved = await getSavedBooks();
       setSavedBooks(saved);
+
+      const randomQueries = getRandomBooks();
+      const bookPromises = randomQueries.map(query => 
+        searchBooks(query, { limit: 1 }).catch(() => null)
+      );
+
+      const results = await Promise.all(bookPromises);
+      const fetchedBooks = results
+        .filter(result => result && result.data && result.data.length > 0)
+        .map(result => result.data[0]);
+
+      setBooks(fetchedBooks);
     } catch (error) {
-      console.error('Error loading recommendations:', error);
+      console.error('Error loading classic books:', error);
     } finally {
       setLoading(false);
     }
@@ -69,71 +99,37 @@ const Recommendations = () => {
     return savedBooks.some(book => book.openLibraryId === bookId);
   };
 
-  const displayBooks = activeTab === 'personalized' ? recommendations : trending;
-
   return (
     <div className="recommendations-section">
       <div className="recommendations-header">
-        <h2>Discover Books</h2>
+        <h2>📚 Classic Books You Might Love</h2>
         <button
-          onClick={loadData}
+          onClick={loadClassicBooks}
           className="refresh-btn"
-          aria-label="Refresh recommendations"
+          aria-label="Show different classics"
+          title="Show different classics"
         >
           <FiRefreshCw />
-          Refresh
+          Shuffle
         </button>
       </div>
 
-      <div className="recommendations-tabs">
-        <button
-          className={`tab-btn ${activeTab === 'personalized' ? 'active' : ''}`}
-          onClick={() => setActiveTab('personalized')}
-        >
-          For You
-        </button>
-        <button
-          className={`tab-btn ${activeTab === 'trending' ? 'active' : ''}`}
-          onClick={() => setActiveTab('trending')}
-        >
-          <FiTrendingUp />
-          Trending
-        </button>
-      </div>
-
-      {activeTab === 'personalized' && basedOn && (
-        <div className="based-on-info">
-          <p>
-            Recommended based on{' '}
-            {basedOn.favoriteGenres.length > 0 && (
-              <span>your favorite genres ({basedOn.favoriteGenres.slice(0, 3).join(', ')})</span>
-            )}
-            {basedOn.savedBooksCount > 0 && (
-              <span>, {basedOn.savedBooksCount} saved books</span>
-            )}
-            {basedOn.recentSearchesCount > 0 && (
-              <span>, and your recent searches</span>
-            )}
-          </p>
-        </div>
-      )}
+      <p className="recommendations-subtitle">
+        Timeless masterpieces that have captivated readers for generations
+      </p>
 
       {loading ? (
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Loading recommendations...</p>
+          <p>Loading classics...</p>
         </div>
-      ) : displayBooks.length === 0 ? (
+      ) : books.length === 0 ? (
         <div className="empty-state">
-          <p>
-            {activeTab === 'personalized'
-              ? 'Start saving books and searching to get personalized recommendations!'
-              : 'No trending books available at the moment.'}
-          </p>
+          <p>Unable to load classic books at the moment. Please try again.</p>
         </div>
       ) : (
-        <div className="books-grid">
-          {displayBooks.map((book) => (
+        <div className="books-grid-compact">
+          {books.map((book) => (
             <BookCard
               key={book.id}
               book={book}

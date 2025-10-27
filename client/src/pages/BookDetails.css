@@ -83,8 +83,8 @@
 
 .btn-action.saved:hover {
   background-color: var(--bg-hover);
-  border-color: #ef4444;
-  color: #ef4444;
+  border-color: var(--danger-color);
+  color: var(--danger-color);
 }
 
 .book-info-section {
@@ -146,7 +146,7 @@
 .awards-section {
   padding: 1.25rem;
   background-color: var(--bg-secondary);
-  border-left: 3px solid #fbbf24;
+  border-left: 3px solid var(--warning-color);
   border-radius: 8px;
 }
 
@@ -161,7 +161,7 @@
 }
 
 .awards-section h3 svg {
-  color: #fbbf24;
+  color: var(--warning-color);
   font-size: 1.25rem;
 }
 
