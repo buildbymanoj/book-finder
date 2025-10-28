@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 import { FiBookOpen } from 'react-icons/fi';
 import BookCard from '../components/BookCard';
 import { getSavedBooks, removeFromReadingList } from '../services/bookService';
@@ -24,7 +24,7 @@ const ReadingList = () => {
       const data = await getSavedBooks();
       setBooks(data);
     } catch (error) {
-      toast.error('Failed to load reading list');
+      // Optionally handle error silently
     } finally {
       setLoading(false);
     }
@@ -33,10 +33,9 @@ const ReadingList = () => {
   const handleRemoveBook = async (book) => {
     try {
       await removeFromReadingList(book._id);
-      toast.success('Book removed from reading list');
-      await loadBooks();
+      setBooks(prevBooks => prevBooks.filter(b => b._id !== book._id));
     } catch (error) {
-      toast.error('Failed to remove book');
+      // Optionally handle error silently
     }
   };
 

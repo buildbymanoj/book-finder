@@ -85,28 +85,41 @@ const Home = () => {
   };
 
   const handleSaveBook = async (book) => {
-    const bookData = {
-      openLibraryId: book.id,
-      title: book.title,
-      author: book.author,
-      coverUrl: book.coverUrl,
-      publishYear: book.publishYear,
-      description: book.description,
-      isbn: book.isbn,
-      genres: book.genres || []
-    };
-
-    await addToReadingList(bookData);
-    await loadSavedBooks();
+    try {
+      const bookData = {
+        openLibraryId: book.id.startsWith('/') ? book.id.substring(1) : book.id,
+        title: book.title,
+        author: book.author,
+        coverUrl: book.coverUrl,
+        publishYear: book.publishYear,
+        description: book.description,
+        isbn: book.isbn,
+        genres: book.genres || []
+      };
+      const newSavedBook = await addToReadingList(bookData);
+      setSavedBooks(prev => [...prev, newSavedBook]);
+    } catch (error) {
+      console.error('Error saving book:', error);
+      toast.error('Failed to add book to list.');
+    }
   };
 
   const handleRemoveBook = async (book) => {
-    await removeByOpenLibraryId(book.id);
-    await loadSavedBooks();
+    try {
+      // The book ID from search results is like '/works/OL123W'. We need to extract 'OL123W'.
+      const olid = book.id.split('/').pop();
+      await removeByOpenLibraryId(olid);
+      setSavedBooks(prev => prev.filter(b => b.openLibraryId !== olid));
+    } catch (error) {
+      console.error('Error removing book:', error);
+      toast.error('Failed to remove book from list.');
+    }
   };
 
   const isBookSaved = (bookId) => {
-    return savedBooks.some(book => book.openLibraryId === bookId);
+    // Normalize bookId by removing leading slash if present
+    const normalizedId = bookId.startsWith('/') ? bookId.substring(1) : bookId;
+    return savedBooks.some(book => book.openLibraryId === normalizedId);
   };
 
   return (
@@ -145,14 +158,14 @@ const Home = () => {
           <div className="results-header">
             <h2>Search Results ({books.length > 6 ? 6 : books.length})</h2>
           </div>
-          <div className="books-grid">
+          <div className="books-grid-compact">
             {books.slice(0, 6).map((book) => (
               <BookCard
                 key={book.id}
                 book={book}
                 isSaved={isBookSaved(book.id)}
-                onSave={handleSaveBook}
-                onRemove={handleRemoveBook}
+                onSave={() => handleSaveBook(book)}
+                // No onRemove prop passed from Home page
               />
             ))}
           </div>
@@ -162,7 +175,7 @@ const Home = () => {
       {!loading && !searched && (
         <div className="welcome-section">
           <div className="welcome-content">
-            <h2>Welcome to Book Finder! 📚</h2>
+            <h2>Welcome to Book Finder!</h2>
             {/* <p>Discover books in multiple ways:</p>
             <ul>
               <li><strong>Search by text:</strong> Book title, author name, ISBN, or keywords</li>
@@ -170,7 +183,7 @@ const Home = () => {
               <li><strong>Filter by year:</strong> Find books published in a specific year range</li>
               <li><strong>Combine both:</strong> Search with filters for precise results</li>
             </ul> */}
-            <p className="tip">💡 <strong>Quick Start:</strong> Use the filters below to browse books by genre without searching!</p>
+            <p className="tip"><strong>Quick Start:</strong> Use the filters below to browse books by genre without searching!</p>
           </div>
 
           {/* Show recommendations on home */}

@@ -12,7 +12,6 @@ const { errorHandler, notFound } = require('./middleware/errorHandler');
 // Import routes
 const authRoutes = require('./routes/auth');
 const bookRoutes = require('./routes/books');
-const reviewRoutes = require('./routes/reviews');
 const recommendationRoutes = require('./routes/recommendations');
 
 // Initialize Express app
@@ -49,7 +48,6 @@ app.get('/api/health', (req, res) => {
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/books', bookRoutes);
-app.use('/api/reviews', reviewRoutes);
 app.use('/api/recommendations', recommendationRoutes);
 
 // Error handling

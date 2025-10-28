@@ -20,9 +20,6 @@ router.get('/', protect, async (req, res, next) => {
   try {
     const user = await User.findById(req.user.id);
     const savedBooks = await Book.find({ user: req.user.id }).limit(20);
-    const searchHistory = await SearchHistory.find({ user: req.user.id })
-      .sort({ searchedAt: -1 })
-      .limit(10);
 
     // Collect genres from multiple sources
     let genres = new Set();
@@ -40,11 +37,6 @@ router.get('/', protect, async (req, res, next) => {
     });
 
     // 3. Inferred genres from search history
-    searchHistory.forEach(search => {
-      if (search.inferredGenres && search.inferredGenres.length > 0) {
-        search.inferredGenres.forEach(g => genres.add(g.toLowerCase()));
-      }
-    });
 
     // Convert to array and get top genres
     const genreArray = Array.from(genres).slice(0, 3);
@@ -107,7 +99,7 @@ router.get('/', protect, async (req, res, next) => {
       basedOn: {
         favoriteGenres: Array.from(genres),
         savedBooksCount: savedBooks.length,
-        recentSearchesCount: searchHistory.length
+          recentSearchesCount: 0
       },
       data: uniqueRecommendations
     });

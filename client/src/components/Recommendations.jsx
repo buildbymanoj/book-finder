@@ -26,7 +26,6 @@ const CLASSIC_BOOKS_QUERIES = [
   'The Odyssey Homer',
   'Crime and Punishment Dostoevsky',
   'The Brothers Karamazov',
-  'War and Peace Tolstoy',
   'Anna Karenina',
   'Brave New World Aldous Huxley',
   'Animal Farm George Orwell',
@@ -43,9 +42,9 @@ const Recommendations = () => {
   }, []);
 
   const getRandomBooks = () => {
-    // Shuffle and pick 4 random classic books
+    // Shuffle and pick 3 random classic books
     const shuffled = [...CLASSIC_BOOKS_QUERIES].sort(() => Math.random() - 0.5);
-    return shuffled.slice(0, 4);
+    return shuffled.slice(0, 3);
   };
 
   const loadClassicBooks = async () => {
@@ -74,7 +73,7 @@ const Recommendations = () => {
 
   const handleSaveBook = async (book) => {
     const bookData = {
-      openLibraryId: book.id,
+      openLibraryId: book.id.startsWith('/') ? book.id.substring(1) : book.id,
       title: book.title,
       author: book.author,
       coverUrl: book.coverUrl,
@@ -90,13 +89,15 @@ const Recommendations = () => {
   };
 
   const handleRemoveBook = async (book) => {
-    await removeByOpenLibraryId(book.id);
-    const updated = await getSavedBooks();
-    setSavedBooks(updated);
+    const bookId = book.id.startsWith('/') ? book.id.substring(1) : book.id;
+    await removeByOpenLibraryId(bookId);
+    setSavedBooks(prev => prev.filter(b => b.openLibraryId !== bookId));
   };
 
   const isBookSaved = (bookId) => {
-    return savedBooks.some(book => book.openLibraryId === bookId);
+    // Normalize bookId by removing leading slash if present
+    const normalizedId = bookId.startsWith('/') ? bookId.substring(1) : bookId;
+    return savedBooks.some(book => book.openLibraryId === normalizedId);
   };
 
   return (
@@ -134,8 +135,8 @@ const Recommendations = () => {
               key={book.id}
               book={book}
               isSaved={isBookSaved(book.id)}
-              onSave={handleSaveBook}
-              onRemove={handleRemoveBook}
+              onSave={() => handleSaveBook(book)}
+              // No onRemove prop passed from Recommendations
             />
           ))}
         </div>

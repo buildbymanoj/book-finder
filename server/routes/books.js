@@ -7,7 +7,6 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const Book = require('../models/Book');
-const SearchHistory = require('../models/SearchHistory');
 const { protect } = require('../middleware/auth');
 
 /**
@@ -137,14 +136,6 @@ router.get('/search', protect, async (req, res, next) => {
       });
     }
 
-    // Track search in history
-    const inferredGenres = genre ? [genre] : [];
-    const searchTerm = q && q.trim() !== '' ? q.trim() : `Genre: ${genre || 'All'}`;
-    await SearchHistory.addSearch(req.user.id, {
-      query: searchTerm,
-      resultsCount: books.length,
-      inferredGenres
-    });
 
     res.json({
       success: true,

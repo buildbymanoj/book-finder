@@ -4,6 +4,7 @@
  */
 
 import React, { useContext } from 'react';
+// Custom hamburger SVG
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FiBook, FiLogOut, FiBookmark, FiMoon, FiSun } from 'react-icons/fi';
 import { AuthContext } from '../context/AuthContext';
@@ -31,17 +32,52 @@ const Navbar = () => {
     handleLogout();
   };
 
+
+  // Responsive hamburger menu state
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+      if (window.innerWidth > 768) setMenuOpen(false);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Close menu on route change
+  React.useEffect(() => { setMenuOpen(false); }, [location.pathname]);
+
+  const handleHamburgerClick = () => setMenuOpen((prev) => !prev);
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <nav className="navbar">
-      <div className="container navbar-container">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
-          <FiBook className="logo-icon" />
-          <span>Book Finder</span>
-        </Link>
 
-        {/* Navigation Links */}
-        {user && (
+      <div className="container navbar-container">
+        {/* Hamburger for mobile (left) */}
+        {user && isMobile && (
+          <button className="hamburger-btn left" onClick={handleHamburgerClick} aria-label="Menu">
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+              <rect x="6" y="10" width="20" height="2.5" rx="1.25" fill="var(--primary-color)" />
+              <rect x="6" y="16" width="20" height="2.5" rx="1.25" fill="var(--primary-color)" />
+              <rect x="6" y="22" width="20" height="2.5" rx="1.25" fill="var(--primary-color)" />
+            </svg>
+          </button>
+        )}
+
+        {/* Centered logo and title for mobile */}
+        <div className={`navbar-center-logo${isMobile ? ' mobile' : ''}`}>
+          <Link to="/" className="navbar-logo">
+            <FiBook className="logo-icon" />
+            <span>Book Finder</span>
+          </Link>
+        </div>
+
+
+        {/* Navigation Links (desktop) */}
+        {user && !isMobile && (
           <div className="navbar-menu">
             <Link 
               to="/" 
@@ -105,6 +141,27 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {/* Mobile menu drawer */}
+      {user && isMobile && menuOpen && (
+        <div className="mobile-menu">
+          <Link 
+            to="/" 
+            className={`nav-link ${location.pathname === '/' ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            Search Books
+          </Link>
+          <Link 
+            to="/reading-list" 
+            className={`nav-link ${location.pathname === '/reading-list' ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            <FiBookmark className="nav-icon" />
+            My Reading List
+          </Link>
+        </div>
+      )}
     </nav>
   );
 };

@@ -10,46 +10,46 @@
 }
 
 :root {
-  /* Light Theme Colors */
-  --bg-primary: #FAFAFA;
-  --bg-secondary: #FAFAFA;
-  --bg-hover: #f3f4f6;
-  --primary-color: #4A90E2;
-  --primary-hover: #0D47A1;
-  --primary-light: #dbeafe;
-  --accent-color: #F5A623;
-  --danger-color: #ef4444;
-  --warning-color: #f59e0b;
-  --button-bg: #0D47A1;
-  --text-primary: #212121;
-  --text-secondary: #616161;
-  --text-tertiary: #9ca3af;
-  --border-color: #E0E0E0;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  /* Light Theme Colors - Violet Shades Only */
+  --bg-primary: #f5f3ff;
+  --bg-secondary: #ede9fe;
+  --bg-hover: #e9d5ff;
+  --primary-color: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-light: #c4b5fd;
+  --accent-color: #a78bfa;
+  --danger-color: #a78bfa;
+  --warning-color: #c4b5fd;
+  --button-bg: #7c3aed;
+  --text-primary: #3b0764;
+  --text-secondary: #6d28d9;
+  --text-tertiary: #a78bfa;
+  --border-color: #c4b5fd;
+  --shadow-sm: 0 1px 2px 0 rgba(124, 58, 237, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(124, 58, 237, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
   --radius: 8px;
   --transition: all 0.3s ease;
 }
 
 /* Dark Mode */
 .dark-mode {
-  /* Dark Theme Colors */
-  --bg-primary: #121212;
-  --bg-secondary: #121212;
-  --bg-hover: #374151;
-  --primary-color: #BB86FC;
-  --primary-hover: #3700B3;
-  --primary-light: #1e3a8a;
-  --accent-color: #03DAC6;
-  --button-bg: #3700B3;
-  --text-primary: #E0E0E0;
-  --text-secondary: #A0A0A0;
-  --text-tertiary: #9ca3af;
-  --border-color: #2D2D3A;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+  /* Dark Theme Colors - Violet Shades Only */
+  --bg-primary: #1e1b4b;
+  --bg-secondary: #2e1065;
+  --bg-hover: #4c1d95;
+  --primary-color: #a78bfa;
+  --primary-hover: #7c3aed;
+  --primary-light: #c4b5fd;
+  --accent-color: #7c3aed;
+  --button-bg: #7c3aed;
+  --text-primary: #f3e8ff;
+  --text-secondary: #c4b5fd;
+  --text-tertiary: #a78bfa;
+  --border-color: #7c3aed;
+  --shadow-sm: 0 1px 2px 0 rgba(167, 139, 250, 0.15);
+  --shadow-md: 0 4px 6px -1px rgba(167, 139, 250, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(167, 139, 250, 0.3);
 }
 
 /* High Contrast Mode */
