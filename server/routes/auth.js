@@ -207,4 +207,73 @@ router.put('/preferences', protect, async (req, res, next) => {
   }
 });
 
+/**
+ * @route   PUT /api/auth/profile
+ * @desc    Update user profile (username and/or password)
+ * @access  Private
+ */
+router.put('/profile', protect, [
+  body('username').optional().trim().isLength({ min: 3, max: 30 }),
+  body('currentPassword').optional().isLength({ min: 8 }),
+  body('newPassword').optional().isLength({ min: 8 })
+], async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: errors.array()[0].msg
+      });
+    }
+
+    const { username, currentPassword, newPassword } = req.body;
+    const user = await User.findById(req.user.id).select('+password');
+
+    // Update username if provided
+    if (username && username !== user.username) {
+      // Check if username already exists
+      const usernameExists = await User.findOne({ username });
+      if (usernameExists) {
+        return res.status(400).json({
+          success: false,
+          message: 'Username already exists'
+        });
+      }
+      user.username = username;
+    }
+
+    // Update password if provided
+    if (newPassword) {
+      if (!currentPassword) {
+        return res.status(400).json({
+          success: false,
+          message: 'Current password is required to change password'
+        });
+      }
+      const isPasswordValid = await user.comparePassword(currentPassword);
+      if (!isPasswordValid) {
+        return res.status(401).json({
+          success: false,
+          message: 'Incorrect current password'
+        });
+      }
+      user.password = newPassword;
+    }
+
+    await user.save();
+
+    res.json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        id: user._id,
+        username: user.username,
+        email: user.email
+      }
+    });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;

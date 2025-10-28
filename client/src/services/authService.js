@@ -69,3 +69,13 @@ export const updatePreferences = async (preferences) => {
   const response = await api.put('/auth/preferences', preferences);
   return response.data.data;
 };
+
+/**
+ * Update user profile (username and/or password)
+ * @param {Object} data - { username, currentPassword, newPassword }
+ * @returns {Promise} Updated user data
+ */
+export const updateProfile = async (data) => {
+  const response = await api.put('/auth/profile', data);
+  return response.data.data;
+};

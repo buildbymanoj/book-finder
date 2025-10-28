@@ -1,3 +1,7 @@
+.dark-mode .user-dropdown .btn-profile {
+  color: #fff !important;
+  background: var(--primary-color, #7c3aed);
+}
 /**
  * Navbar Styles
  */

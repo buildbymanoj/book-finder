@@ -27,6 +27,20 @@ const Navbar = () => {
   // User menu dropdown state
   const [showDropdown, setShowDropdown] = React.useState(false);
   const handleUserMenuClick = () => setShowDropdown((prev) => !prev);
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    if (!showDropdown) return;
+    const handleClickOutside = (event) => {
+      const dropdown = document.querySelector('.user-dropdown');
+      const avatarBtn = document.querySelector('.user-avatar-btn');
+      if (dropdown && !dropdown.contains(event.target) && avatarBtn && !avatarBtn.contains(event.target)) {
+        setShowDropdown(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showDropdown]);
   const handleDropdownLogout = () => {
     setShowDropdown(false);
     handleLogout();
@@ -127,6 +141,9 @@ const Navbar = () => {
                     <div className="user-name">{user.username}</div>
                     <div className="user-email">{user.email}</div>
                   </div>
+                  <Link to="/edit-profile" style={{ padding: 0, background: 'none', color: 'inherit', fontWeight: 500, fontSize: '1rem', textDecoration: 'none', border: 'none', boxShadow: 'none', cursor: 'pointer' }} onClick={() => setShowDropdown(false)}>
+                    Edit Profile
+                  </Link>
                   <button onClick={handleDropdownLogout} className="btn btn-logout">
                     <FiLogOut className="btn-icon" /> Logout
                   </button>
@@ -159,6 +176,13 @@ const Navbar = () => {
           >
             <FiBookmark className="nav-icon" />
             My Reading List
+          </Link>
+          <Link 
+            to="/edit-profile" 
+            className={`nav-link ${location.pathname === '/edit-profile' ? 'active' : ''}`}
+            onClick={closeMenu}
+          >
+            Edit Profile
           </Link>
         </div>
       )}

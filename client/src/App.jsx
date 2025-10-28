@@ -18,6 +18,7 @@ import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
 import ReadingList from './pages/ReadingList';
 import BookDetails from './pages/BookDetails';
+import EditProfile from './pages/EditProfile';
 import PrivateRoute from './components/PrivateRoute';
 
 // Services
@@ -105,6 +106,14 @@ const AppContent = ({ user, setUser, loading }) => {
                   <BookDetails />
                 </PrivateRoute>
               } 
+            />
+            <Route 
+              path="/edit-profile" 
+              element={
+                <PrivateRoute>
+                  <EditProfile />
+                </PrivateRoute>
+              }
             />
             {/* Fallback Route */}
             <Route path="*" element={<Navigate to="/" />} />
