@@ -29,6 +29,8 @@ const userSchema = new mongoose.Schema({
     minlength: [8, 'Password must be at least 8 characters'],
     select: false // Don't include password in queries by default
   },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
   // User preferences
   favoriteGenres: [{
     type: String,

@@ -161,7 +161,7 @@ section .container .user .formBx form input::placeholder {
 }
 
 section .container .user .formBx form input[type='submit'] {
-  max-width: 100px;
+  max-width: 150px;
   background: var(--primary-color);
   color: #fff;
   cursor: pointer;

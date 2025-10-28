@@ -156,6 +156,11 @@ const AuthPage = () => {
                 disabled={loading}
                 required
               />
+              <div style={{ textAlign: 'right', marginBottom: '10px' }}>
+                <a href={`/forgot-password${loginData.identifier ? `?email=${encodeURIComponent(loginData.identifier)}` : ''}`} style={{ color: '#007bff', textDecoration: 'none', fontSize: '14px' }}>
+                  Forgot Password?
+                </a>
+              </div>
               <input
                 type="submit"
                 value={loading ? 'Signing in...' : 'Login'}

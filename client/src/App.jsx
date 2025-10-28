@@ -19,6 +19,8 @@ import AuthPage from './pages/AuthPage';
 import ReadingList from './pages/ReadingList';
 import BookDetails from './pages/BookDetails';
 import EditProfile from './pages/EditProfile';
+import ForgotPassword from './pages/ForgotPassword';
+import ResetPassword from './pages/ResetPassword';
 import PrivateRoute from './components/PrivateRoute';
 
 // Services
@@ -81,6 +83,14 @@ const AppContent = ({ user, setUser, loading }) => {
             <Route 
               path="/register" 
               element={user ? <Navigate to="/" /> : <AuthPage />} 
+            />
+            <Route 
+              path="/forgot-password" 
+              element={user ? <Navigate to="/" /> : <ForgotPassword />} 
+            />
+            <Route 
+              path="/reset-password/:token" 
+              element={user ? <Navigate to="/" /> : <ResetPassword />} 
             />
             {/* Private Routes */}
             <Route 

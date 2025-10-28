@@ -79,3 +79,24 @@ export const updateProfile = async (data) => {
   const response = await api.put('/auth/profile', data);
   return response.data.data;
 };
+
+/**
+ * Send password reset email
+ * @param {String} email - User email
+ * @returns {Promise} Success message
+ */
+export const forgotPassword = async (email) => {
+  const response = await api.post('/auth/forgot-password', { email });
+  return response.data;
+};
+
+/**
+ * Reset password using token
+ * @param {String} token - Reset token
+ * @param {String} password - New password
+ * @returns {Promise} Success message
+ */
+export const resetPassword = async (token, password) => {
+  const response = await api.post('/auth/reset-password', { token, password });
+  return response.data;
+};
