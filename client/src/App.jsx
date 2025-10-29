@@ -22,6 +22,7 @@ import EditProfile from './pages/EditProfile';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PrivateRoute from './components/PrivateRoute';
+import NotFound from './pages/NotFound';
 
 // Services
 import { getCurrentUser } from './services/authService';
@@ -43,14 +44,14 @@ const AppContent = ({ user, setUser, loading }) => {
     );
   }
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
 
   return (
     <div className="App" style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
       {/* Background GradientBlinds */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, width: '100vw', height: '100vh', pointerEvents: 'none' }}>
         <GradientBlinds
-          gradientColors={['#FF9FFC', '#5227FF']}
+          gradientColors={["#FF9FFC", "#5227FF"]}
           angle={0}
           noise={0.3}
           blindCount={12}
@@ -92,15 +93,12 @@ const AppContent = ({ user, setUser, loading }) => {
               path="/reset-password/:token" 
               element={user ? <Navigate to="/" /> : <ResetPassword />} 
             />
-            {/* Private Routes */}
+            {/* Show login/register at / if not logged in, else Home */}
             <Route 
               path="/" 
-              element={
-                <PrivateRoute>
-                  <Home />
-                </PrivateRoute>
-              } 
+              element={user ? <Home /> : <AuthPage />} 
             />
+            {/* Private Routes */}
             <Route 
               path="/reading-list" 
               element={
@@ -125,8 +123,8 @@ const AppContent = ({ user, setUser, loading }) => {
                 </PrivateRoute>
               }
             />
-            {/* Fallback Route */}
-            <Route path="*" element={<Navigate to="/" />} />
+            {/* Fallback Route: Show NotFound page */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         {/* Toast Notifications */}
