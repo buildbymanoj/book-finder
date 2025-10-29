@@ -37,6 +37,13 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 // Health check route
+
+// Root route for backend
+app.get('/', (req, res) => {
+  res.send('Book Finder API backend is running.');
+});
+
+// Health check route
 app.get('/api/health', (req, res) => {
   res.json({
     success: true,
