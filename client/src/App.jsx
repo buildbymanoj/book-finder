@@ -44,7 +44,8 @@ const AppContent = ({ user, setUser, loading }) => {
     );
   }
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/';
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password');
+  const showOnlyAppName = isAuthPage || (location.pathname === '/' && !user);
 
   return (
     <div className="App" style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden' }}>
@@ -67,7 +68,7 @@ const AppContent = ({ user, setUser, loading }) => {
       </div>
       <div style={{ position: 'relative', zIndex: 1 }}>
         {/* Show only app name for login/register, full Navbar otherwise */}
-        {isAuthPage ? (
+        {showOnlyAppName ? (
           <div style={{ width: '100%', textAlign: 'center', padding: '2rem 0 1rem 0', fontWeight: 700, fontSize: '2rem', color: 'var(--primary-color)', letterSpacing: '2px' }}>
             Book Finder
           </div>
