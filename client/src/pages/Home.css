@@ -14,7 +14,7 @@
 
 .home-header .page-title,
 .home-header .page-subtitle {
-  color: #fff !important;
+  color: var(--text-primary);
 }
 
 .page-title {
@@ -42,7 +42,7 @@
 .results-header h2 {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #fff !important;
+  color: var(--text-primary);
 }
 
 .loading-state,

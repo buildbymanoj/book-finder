@@ -1,26 +1,26 @@
 /* Fix Add to List and Remove button hover/fade issues */
 .btn-primary {
   background-color: var(--primary-color);
-  color: #fff;
+  color: var(--btn-text);
   border: none;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
 }
 .btn-primary:hover:not(:disabled) {
   background-color: var(--primary-hover);
-  color: #fff;
+  color: var(--btn-text);
   opacity: 1;
 }
 .btn-danger {
   background-color: var(--danger-color);
-  color: #fff;
+  color: var(--btn-text);
   border: none;
   font-weight: 600;
   transition: background 0.2s, color 0.2s;
 }
 .btn-danger:hover:not(:disabled) {
-  background-color: #a78bfa;
-  color: #fff;
+  background-color: var(--danger-color);
+  color: var(--btn-text);
   opacity: 1;
 }
 /**
@@ -37,6 +37,46 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+}
+
+/* Override Bootstrap card styles */
+.card {
+  background-color: var(--bg-primary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-primary) !important;
+}
+
+.card-body {
+  color: var(--text-primary) !important;
+}
+
+.card-title {
+  color: var(--text-primary) !important;
+}
+
+.card-text {
+  color: var(--text-secondary) !important;
+}
+
+.card-footer {
+  background-color: var(--bg-secondary) !important;
+  border-color: var(--border-color) !important;
+  color: var(--text-secondary) !important;
+}
+
+.badge {
+  background-color: var(--primary-light) !important;
+  color: var(--primary-color) !important;
+}
+
+/* Dark mode overrides for Bootstrap */
+.dark-mode .card {
+  background-color: #4c1d95 !important;
+  border-color: #7c3aed !important;
+}
+
+.dark-mode .card-footer {
+  background-color: #2e1065 !important;
 }
 
 .book-card:hover {
@@ -67,7 +107,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.75);
+  background: var(--dark-overlay);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +125,7 @@
   gap: 0.5rem;
   padding: 0.75rem 1.25rem;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--btn-text);
   text-decoration: none;
   border-radius: 8px;
   font-weight: 600;
@@ -191,7 +231,7 @@
 
 .btn-save {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--btn-text);
 }
 
 .btn-save:hover:not(:disabled) {
@@ -199,12 +239,12 @@
 }
 
 .btn-remove {
-  background-color: #ef4444;
-  color: white;
+  background-color: var(--remove-bg);
+  color: var(--btn-text);
 }
 
 .btn-remove:hover:not(:disabled) {
-  background-color: #dc2626;
+  background-color: var(--remove-hover);
 }
 
 .btn-icon {

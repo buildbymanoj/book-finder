@@ -2,8 +2,8 @@
 .edit-profile-container {
   max-width: 400px;
   margin: 40px auto;
-  background: var(--bg-primary, #fff);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+  background: var(--bg-primary);
+  box-shadow: var(--shadow-lg);
   border-radius: 16px;
   padding: 32px 24px;
   display: flex;
@@ -14,7 +14,7 @@
 .edit-profile-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--primary-color, #7c3aed);
+  color: var(--primary-color);
   margin-bottom: 24px;
   text-align: center;
   letter-spacing: 1px;
@@ -24,7 +24,7 @@
 }
 
 .dark-mode .edit-profile-title {
-  color: #fff !important;
+  color: var(--text-primary);
 }
 
 .edit-profile-form {
@@ -57,8 +57,8 @@
 }
 
 .edit-profile-form button {
-  background: var(--primary-color, #7c3aed);
-  color: #fff;
+  background: var(--primary-color);
+  color: var(--btn-text);
   border: none;
   border-radius: 8px;
   padding: 12px;

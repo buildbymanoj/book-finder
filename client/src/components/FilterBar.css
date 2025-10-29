@@ -56,7 +56,7 @@
 .filter-select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .year-range-inline {
@@ -83,7 +83,7 @@
 .year-input-inline:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .year-input-inline::placeholder {
@@ -130,7 +130,7 @@
   border: 1px solid var(--border-color);
   border-radius: 6px;
   background: var(--bg-primary);
-  color: #ef4444;
+  color: var(--remove-bg);
   font-size: 0.9375rem;
   font-weight: 500;
   cursor: pointer;
@@ -139,9 +139,9 @@
 }
 
 .btn-clear-filters:hover {
-  background: #ef4444;
-  color: white;
-  border-color: #ef4444;
+  background: var(--remove-bg);
+  color: var(--btn-text);
+  border-color: var(--remove-bg);
 }
 
 /* Mobile Responsive */
@@ -188,8 +188,10 @@
 
 .dark-mode .preset-btn-small:hover {
   background: var(--primary-color);
+  color: var(--btn-text);
 }
 
 .dark-mode .btn-clear-filters:hover {
-  background: #ef4444;
+  background: var(--remove-bg);
+  color: var(--btn-text);
 }

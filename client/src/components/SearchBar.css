@@ -30,13 +30,14 @@
   border-radius: var(--radius);
   font-size: 1rem;
   transition: var(--transition);
-  background-color: white;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .search-input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  box-shadow: 0 0 0 3px var(--primary-light);
 }
 
 .search-input:disabled {
@@ -72,7 +73,7 @@
 .btn-search {
   padding: 1rem 2rem;
   background-color: var(--primary-color);
-  color: white;
+  color: var(--btn-text);
   border: none;
   border-radius: var(--radius);
   font-weight: 600;
@@ -82,7 +83,7 @@
 }
 
 .btn-search:hover:not(:disabled) {
-  background-color: var(--primary-dark);
+  background-color: var(--primary-hover);
   box-shadow: var(--shadow-md);
 }
 

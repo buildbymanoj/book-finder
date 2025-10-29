@@ -64,7 +64,7 @@
   background-color: var(--primary-color);
   border: none;
   border-radius: 8px;
-  color: white;
+  color: var(--btn-text);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -239,7 +239,7 @@
   background-color: var(--primary-color);
   border: none;
   border-radius: 8px;
-  color: white;
+  color: var(--btn-text);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;

@@ -290,6 +290,7 @@ router.post('/forgot-password', [
     // Validate input
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      console.log('Forgot Password: Invalid email input', req.body.email);
       return res.status(400).json({
         success: false,
         message: 'Please enter a valid email address'
@@ -297,12 +298,14 @@ router.post('/forgot-password', [
     }
 
     const { email } = req.body;
+    console.log('Forgot Password: Request received for', email);
 
     // Find user by email
     const user = await User.findOne({ email });
 
     if (!user) {
       // Don't reveal if email exists or not for security
+      console.log('Forgot Password: No user found for', email);
       return res.json({
         success: true,
         message: 'If an account with that email exists, a password reset link has been sent.'
@@ -317,10 +320,12 @@ router.post('/forgot-password', [
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = resetPasswordExpires;
     await user.save();
+    console.log('Forgot Password: Reset token generated and saved for', email);
 
     // Send email
     try {
       await sendPasswordResetEmail(user.email, resetToken);
+      console.log('Forgot Password: Reset email sent to', user.email);
       res.json({
         success: true,
         message: 'If an account with that email exists, a password reset link has been sent.'
@@ -330,13 +335,14 @@ router.post('/forgot-password', [
       user.resetPasswordToken = undefined;
       user.resetPasswordExpires = undefined;
       await user.save();
-
+      console.error('Forgot Password: Failed to send reset email', emailError);
       return res.status(500).json({
         success: false,
         message: 'Failed to send reset email. Please try again later.'
       });
     }
   } catch (error) {
+    console.error('Forgot Password: Unexpected error', error);
     next(error);
   }
 });

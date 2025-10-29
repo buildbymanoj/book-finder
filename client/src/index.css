@@ -30,14 +30,19 @@
   --shadow-lg: 0 10px 15px -3px rgba(124, 58, 237, 0.1);
   --radius: 8px;
   --transition: all 0.3s ease;
+  --light-bg: #f8fafc;
+  --dark-overlay: rgba(0, 0, 0, 0.75);
+  --btn-text: #ffffff;
+  --remove-bg: #ef4444;
+  --remove-hover: #dc2626;
 }
 
 /* Dark Mode */
 .dark-mode {
   /* Dark Theme Colors - Violet Shades Only */
-  --bg-primary: #1e1b4b;
-  --bg-secondary: #2e1065;
-  --bg-hover: #4c1d95;
+  --bg-primary: #0f0a19;
+  --bg-secondary: #1e1b4b;
+  --bg-hover: #2e1065;
   --primary-color: #a78bfa;
   --primary-hover: #7c3aed;
   --primary-light: #c4b5fd;
@@ -50,6 +55,11 @@
   --shadow-sm: 0 1px 2px 0 rgba(167, 139, 250, 0.15);
   --shadow-md: 0 4px 6px -1px rgba(167, 139, 250, 0.2);
   --shadow-lg: 0 10px 15px -3px rgba(167, 139, 250, 0.3);
+  --light-bg: #1e1b4b;
+  --dark-overlay: rgba(0, 0, 0, 0.85);
+  --btn-text: #ffffff;
+  --remove-bg: #ef4444;
+  --remove-hover: #dc2626;
 }
 
 /* High Contrast Mode */

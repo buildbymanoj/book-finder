@@ -1,6 +1,6 @@
 .dark-mode .user-dropdown .btn-profile {
-  color: #fff !important;
-  background: var(--primary-color, #7c3aed);
+  color: var(--btn-text) !important;
+  background: var(--primary-color);
 }
 /**
  * Navbar Styles
@@ -66,12 +66,12 @@
 
 .nav-link:hover {
   color: var(--primary-color);
-  background-color: var(--light-bg);
+  background-color: var(--bg-hover);
 }
 
 .nav-link.active {
   color: var(--primary-color);
-  background-color: #eff6ff;
+  background-color: var(--bg-hover);
 }
 
 .nav-icon {
@@ -126,11 +126,11 @@
 
 .btn-primary {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--btn-text);
 }
 
 .btn-primary:hover {
-  background-color: var(--primary-dark);
+  background-color: var(--primary-hover);
   transform: translateY(-1px);
   box-shadow: var(--shadow-md);
 }
@@ -143,16 +143,16 @@
 
 .btn-secondary:hover {
   background-color: var(--primary-color);
-  color: white;
+  color: var(--btn-text);
 }
 
 .btn-logout {
   background-color: var(--danger-color);
-  color: white;
+  color: var(--btn-text);
 }
 
 .btn-logout:hover {
-  background-color: #dc2626;
+  background-color: var(--remove-hover);
 }
 
 .btn-icon {
@@ -191,7 +191,7 @@
   outline: 2px solid var(--primary-color);
 }
 .user-avatar-btn:hover {
-  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+  box-shadow: var(--shadow-md);
 }
 
 .user-dropdown {
@@ -284,7 +284,7 @@
   width: 70vw;
   max-width: 320px;
   background: var(--bg-primary);
-  box-shadow: -2px 0 12px rgba(0, 0, 0, 0.12);
+  box-shadow: var(--shadow-lg);
   z-index: 1200;
   display: flex;
   flex-direction: column;
