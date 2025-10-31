@@ -16,6 +16,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// Verify transporter on startup so we know if SMTP is reachable
+transporter.verify()
+  .then(() => {
+    console.log('EmailService: SMTP connection verified successfully.');
+  })
+  .catch((err) => {
+    console.error('EmailService: SMTP verification failed. Check SMTP credentials and network access.', err && err.message ? err.message : err);
+  });
+
 /**
  * Send password reset email
  * @param {String} to - Recipient email
@@ -65,4 +74,5 @@ const sendPasswordResetEmail = async (to, resetToken) => {
 
 module.exports = {
   sendPasswordResetEmail,
+  transporter,
 };
