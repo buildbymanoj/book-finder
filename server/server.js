@@ -23,6 +23,7 @@ connectDB();
 // Middleware
 const allowedOrigins = [
   'http://localhost:5173',           // Local development
+  'http://127.0.0.1:5173',          // Local development (127.0.0.1)
   'https://book-finder-pi-lyart.vercel.app',  // Vercel deployment
   process.env.CLIENT_URL             // Environment variable
 ].filter(Boolean); // Remove any undefined values

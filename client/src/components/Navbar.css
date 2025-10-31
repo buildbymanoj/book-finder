@@ -272,7 +272,7 @@
   pointer-events: auto;
   background: none;
   box-shadow: none;
-  font-size: 1.3rem;
+  font-size: 1rem; /* Reduced font size for mobile */
   color: var(--primary-color);
 }
 

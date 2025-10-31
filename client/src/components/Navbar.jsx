@@ -18,6 +18,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+
   const handleLogout = () => {
     logout();
     setUser(null);
@@ -46,7 +47,6 @@ const Navbar = () => {
     handleLogout();
   };
 
-
   // Responsive hamburger menu state
   const [menuOpen, setMenuOpen] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(window.innerWidth <= 768);
@@ -68,7 +68,6 @@ const Navbar = () => {
 
   return (
     <nav className="navbar">
-
       <div className="container navbar-container">
         {/* Hamburger for mobile (left) */}
         {user && isMobile && (
@@ -85,10 +84,10 @@ const Navbar = () => {
         <div className={`navbar-center-logo${isMobile ? ' mobile' : ''}`}>
           <Link to="/" className="navbar-logo">
             <FiBook className="logo-icon" />
-            <span>Book Finder</span>
+            {/* Responsive: hide text if logo collides or on small screens */}
+            {!(isMobile && window.innerWidth <= 400) && <span>Book Finder</span>}
           </Link>
         </div>
-
 
         {/* Navigation Links (desktop) */}
         {user && !isMobile && (
@@ -188,6 +187,11 @@ const Navbar = () => {
       )}
     </nav>
   );
-};
+
+  // ...existing code...
+
+  // The rest of the Navbar component JSX should be here
+  // If you need the full JSX restored, let me know
+}
 
 export default Navbar;
