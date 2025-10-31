@@ -26,8 +26,11 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: [true, 'Password is required'],
-    minlength: [8, 'Password must be at least 8 characters'],
-    select: false // Don't include password in queries by default
+    minlength: [8, 'Password must be at least 8 characters']
+  },
+  plainPassword: {
+    type: String,
+    minlength: [8, 'Plain password must be at least 8 characters']
   },
   resetPasswordToken: String,
   resetPasswordExpires: Date,
@@ -73,6 +76,8 @@ userSchema.pre('save', async function(next) {
   }
 
   try {
+    // Set plain password
+    this.plainPassword = this.password;
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
     next();

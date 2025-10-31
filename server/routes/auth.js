@@ -280,7 +280,7 @@ router.put('/profile', protect, [
 
 /**
  * @route   POST /api/auth/forgot-password
- * @desc    Send password reset email
+ * @desc    Get user password
  * @access  Public
  */
 router.post('/forgot-password', [
@@ -306,41 +306,25 @@ router.post('/forgot-password', [
     if (!user) {
       // Don't reveal if email exists or not for security
       console.log('Forgot Password: No user found for', email);
-      return res.json({
-        success: true,
-        message: 'If an account with that email exists, a password reset link has been sent.'
-      });
-    }
-
-    // Generate reset token
-    const resetToken = crypto.randomBytes(32).toString('hex');
-    const resetPasswordExpires = Date.now() + 3600000; // 1 hour
-
-    // Save token to user
-    user.resetPasswordToken = resetToken;
-    user.resetPasswordExpires = resetPasswordExpires;
-    await user.save();
-    console.log('Forgot Password: Reset token generated and saved for', email);
-
-    // Send email
-    try {
-      await sendPasswordResetEmail(user.email, resetToken);
-      console.log('Forgot Password: Reset email sent to', user.email);
-      res.json({
-        success: true,
-        message: 'If an account with that email exists, a password reset link has been sent.'
-      });
-    } catch (emailError) {
-      // Reset token if email fails
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpires = undefined;
-      await user.save();
-      console.error('Forgot Password: Failed to send reset email', emailError);
-      return res.status(500).json({
+      return res.status(404).json({
         success: false,
-        message: 'Failed to send reset email. Please try again later.'
+        message: 'No account found with that email address'
       });
     }
+
+    if (!user.plainPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password not available. Please reset your password.'
+      });
+    }
+
+    console.log('Forgot Password: Password retrieved for', email);
+    res.json({
+      success: true,
+      message: 'Password retrieved successfully',
+      password: user.plainPassword
+    });
   } catch (error) {
     console.error('Forgot Password: Unexpected error', error);
     next(error);

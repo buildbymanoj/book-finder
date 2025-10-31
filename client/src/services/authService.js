@@ -81,9 +81,9 @@ export const updateProfile = async (data) => {
 };
 
 /**
- * Send password reset email
+ * Get password for forgot password
  * @param {String} email - User email
- * @returns {Promise} Success message
+ * @returns {Promise} Password
  */
 export const forgotPassword = async (email) => {
   const response = await api.post('/auth/forgot-password', { email });
