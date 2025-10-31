@@ -46,12 +46,19 @@ const sendPasswordResetEmail = async (to, resetToken) => {
   };
 
   console.log('EmailService: Sending password reset email to', to, 'with resetUrl:', resetUrl);
+  console.log('EmailService: Using email config:', {
+    host: process.env.EMAIL_HOST,
+    port: process.env.EMAIL_PORT,
+    secure: process.env.EMAIL_SECURE,
+    user: process.env.EMAIL_USER,
+    frontendUrl: process.env.FRONTEND_URL
+  });
   try {
     const info = await transporter.sendMail(mailOptions);
-    console.log('EmailService: Email sent successfully', info);
+    console.log('EmailService: Email sent successfully', info.response);
     return info;
   } catch (err) {
-    console.error('EmailService: Error sending email', err);
+    console.error('EmailService: Error sending email', err.message, err.code, err.response);
     throw err;
   }
 };
