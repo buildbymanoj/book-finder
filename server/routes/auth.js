@@ -10,8 +10,7 @@ const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
-const { sendPasswordResetEmail } = require('../utils/emailService');
-const { transporter } = require('../utils/emailService');
+const { sendPasswordResetEmail, sendTestEmail } = require('../utils/emailService');
 
 /**
  * Generate JWT Token
@@ -363,15 +362,9 @@ router.post('/send-test-email', [
     }
     const { email } = req.body;
 
-    // Simple test mail
-    const info = await transporter.sendMail({
-      from: `"Book Finder" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'Test Email from Book Finder',
-      text: 'This is a test email to verify SMTP configuration and connectivity.'
-    });
-
-    return res.json({ success: true, message: 'Test email sent', info: info.response });
+    // Use unified sendTestEmail (tries SMTP, then SendGrid)
+  const info = await sendTestEmail(email);
+  return res.json({ success: true, message: 'Test email sent', info });
   } catch (err) {
     console.error('SendTestEmail: Error sending test email', err && err.message ? err.message : err);
     return res.status(500).json({ success: false, message: 'Failed to send test email', error: err && err.message ? err.message : String(err) });
