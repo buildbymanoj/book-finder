@@ -53,6 +53,7 @@ A comprehensive full-stack book discovery and reading management application tha
 - **API Rate Limiting**: Built-in protection against API abuse
 - **Secure Headers**: CORS configuration and security best practices
 - **Database Security**: MongoDB with proper indexing and data validation
+- **Dual Email Service**: SMTP primary + Resend fallback for maximum reliability across deployment platforms
 
 ## 🛠️ Technology Stack
 
@@ -73,7 +74,7 @@ A comprehensive full-stack book discovery and reading management application tha
 - **bcryptjs** - Password hashing and verification
 - **express-validator** - Server-side input validation
 - **CORS** - Cross-origin resource sharing
-- **Nodemailer** - Email service for password reset
+- **Dual Email Service**: SMTP primary + Resend fallback for maximum reliability
 
 ### **External APIs**
 - **Open Library API** - Access to millions of books and metadata
@@ -83,6 +84,29 @@ A comprehensive full-stack book discovery and reading management application tha
 - **ESLint** - Code linting and style enforcement
 - **Nodemon** - Automatic server restart during development
 - **MongoDB Compass** - Database management GUI (optional)
+
+## 📧 Email Service Architecture
+
+Book Finder implements a **dual email service approach** for maximum reliability across different deployment environments:
+
+### Primary: SMTP (Nodemailer)
+- **Best for**: Development and production with custom domains
+- **Configuration**: Gmail SMTP or any SMTP provider
+- **Pros**: Full control, custom "From" addresses, reliable delivery
+
+### Fallback: Resend
+- **Best for**: Deployment platforms that block SMTP (Render, Vercel, Netlify)
+- **Configuration**: Simple API key setup
+- **Pros**: Works on all platforms, modern API, free tier available
+
+### Email Priority Flow:
+1. **SMTP** (primary) - Tries first, most reliable
+2. **Resend** (fallback) - Used if SMTP fails or is blocked
+
+### For Production Deployment:
+- **Use SMTP** if your platform allows it (Heroku, DigitalOcean, AWS)
+- **Use Resend** if SMTP is blocked (Render, Vercel, Netlify)
+- **Configure both** for maximum reliability
 
 ## 📋 Prerequisites
 
@@ -100,13 +124,21 @@ You'll need to create environment files for both client and server:
 ```env
 NODE_ENV=development
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/book-finder
+MONGODB_URI=mongodb://localhost:27017/book-finder
 JWT_SECRET=your-super-secret-jwt-key-here
 JWT_EXPIRE=30d
 CLIENT_URL=http://localhost:5173
 OPEN_LIBRARY_API=https://openlibrary.org
+
+# Email Configuration (SMTP Primary)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
+
+# Email Configuration (Resend Fallback - for deployment)
+RESEND_API_KEY=your-resend-api-key
 ```
 
 **Client (.env)**
@@ -313,9 +345,17 @@ Use tools like Postman or Insomnia to test API endpoints:
 ### Environment Variables for Production
 ```env
 NODE_ENV=production
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/book-finder
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/book-finder
 JWT_SECRET=your-production-jwt-secret
 CLIENT_URL=https://your-frontend-domain.com
+
+# Email Configuration (choose based on deployment platform)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+RESEND_API_KEY=your-resend-api-key
 ```
 
 ## 🤝 Contributing

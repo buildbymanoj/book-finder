@@ -13,7 +13,7 @@ const ForgotPassword = () => {
   const [searchParams] = useSearchParams();
   const [email, setEmail] = useState(searchParams.get('email') || '');
   const [loading, setLoading] = useState(false);
-  const [password, setPassword] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,21 +26,17 @@ const ForgotPassword = () => {
     setLoading(true);
 
     try {
-      const response = await forgotPassword(email);
-      if (response.success) {
-        setPassword(response.password);
-        toast.success('Password retrieved successfully');
-      } else {
-        toast.error(response.message);
-      }
+      await forgotPassword(email);
+      setSubmitted(true);
+      toast.success('If an account with that email exists, a password reset link has been sent.');
     } catch (error) {
-      toast.error(error.response?.data?.message || 'Failed to retrieve password');
+      toast.error(error.response?.data?.message || 'Failed to send reset email');
     } finally {
       setLoading(false);
     }
   };
 
-  if (password) {
+  if (submitted) {
     return (
       <section>
         <div className="container">
@@ -48,12 +44,12 @@ const ForgotPassword = () => {
             <div className="imgBx"></div>
             <div className="formBx">
               <div style={{ textAlign: 'center' }}>
-                <h2>Your Password</h2>
+                <h2>Check Your Email</h2>
                 <p style={{ margin: '20px 0', color: '#666' }}>
-                  Your password is: <strong>{password}</strong>
+                  If an account with that email exists, we've sent you a password reset link.
                 </p>
                 <p style={{ margin: '20px 0', color: '#666' }}>
-                  Please save it securely.
+                  Check your spam folder if you don't see it in your inbox.
                 </p>
                 <Link to="/login" style={{ color: '#007bff', textDecoration: 'none' }}>
                   ← Back to Login
@@ -75,7 +71,7 @@ const ForgotPassword = () => {
             <form onSubmit={handleSubmit}>
               <h2>Forgot Password</h2>
               <p style={{ margin: '10px 0 20px 0', color: '#666', fontSize: '14px' }}>
-                Enter your email address and we'll show your password.
+                Enter your email address and we'll send you a link to reset your password.
               </p>
               <input
                 type="email"
@@ -88,7 +84,7 @@ const ForgotPassword = () => {
               />
               <input
                 type="submit"
-                value={loading ? 'Retrieving...' : 'Get Password'}
+                value={loading ? 'Sending...' : 'Send Reset Link'}
                 disabled={loading}
               />
               <p className="signup">

@@ -46,7 +46,8 @@ npm start
 - **bcryptjs** - Password hashing
 - **express-validator** - Input validation
 - **CORS** - Cross-origin resource sharing
-- **Nodemailer** - Email service
+- **Nodemailer** - Primary email service (SMTP)
+- **Resend** - Fallback email service (API-based)
 
 ## 📁 Project Structure
 
@@ -82,14 +83,48 @@ Create a `.env` file in the server directory:
 ```env
 NODE_ENV=development
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/book-finder
+MONGODB_URI=mongodb://localhost:27017/book-finder
 JWT_SECRET=your-super-secret-jwt-key-here
 JWT_EXPIRE=30d
 CLIENT_URL=http://localhost:5173
+FRONTEND_URL=http://localhost:5173
 OPEN_LIBRARY_API=https://openlibrary.org
+
+# Email Configuration (SMTP Primary)
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
 EMAIL_USER=your-email@gmail.com
 EMAIL_PASS=your-app-password
+
+# Email Configuration (Resend Fallback - for deployment)
+RESEND_API_KEY=your-resend-api-key
 ```
+
+### Email Service Configuration
+
+The application uses a **dual email service approach** for maximum reliability:
+
+#### Primary: SMTP (Nodemailer)
+- **Best for**: Development and production with custom domains
+- **Configuration**: Gmail SMTP or any SMTP provider
+- **Pros**: Full control, custom "From" addresses, reliable
+- **Cons**: May be blocked by some deployment platforms (Render, Vercel)
+
+#### Fallback: Resend
+- **Best for**: Deployment platforms that block SMTP
+- **Configuration**: Simple API key setup
+- **Pros**: Works on all platforms, modern API, free tier available
+- **Cons**: Test accounts limited to verified emails only
+
+#### Email Priority Flow:
+1. **SMTP** (primary) - Tries first, most reliable
+2. **Resend** (fallback) - Used if SMTP fails or is blocked
+
+#### For Production Deployment:
+- **Use SMTP** if your platform allows it (Heroku, DigitalOcean, AWS)
+- **Use Resend** if SMTP is blocked (Render, Vercel, Netlify)
+- **Test both** to ensure reliability
 
 ### Database Configuration
 
@@ -233,18 +268,69 @@ Routes marked as "Private" require authentication. The `protect` middleware:
 
 ## 📧 Email Service
 
-### Configuration
-Uses Nodemailer for password reset emails:
-- Gmail SMTP configuration
-- Secure token generation
-- HTML email templates
+### Dual Email Service Architecture
+
+The application implements a **robust dual email service** for maximum reliability across different deployment environments:
+
+#### Primary Service: SMTP (Nodemailer)
+- **Technology**: Nodemailer with SMTP
+- **Configuration**: Gmail SMTP or custom SMTP provider
+- **Use Case**: Development and production deployments that allow SMTP
+- **Advantages**: 
+  - Full control over sender address
+  - Custom domain support
+  - Reliable delivery
+  - No external API dependencies
+
+#### Fallback Service: Resend
+- **Technology**: Resend API
+- **Configuration**: Simple API key
+- **Use Case**: Deployment platforms that block SMTP (Render, Vercel, Netlify)
+- **Advantages**:
+  - Works on all platforms
+  - Modern REST API
+  - Free tier available
+  - Excellent deliverability
+
+### Email Priority Flow
+```
+User Request → SMTP (Primary) → Resend (Fallback) → Error
+```
+
+### Configuration Examples
+
+#### For Development/Local:
+```env
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+```
+
+#### For Deployment (SMTP blocked):
+```env
+RESEND_API_KEY=re_your_resend_api_key_here
+```
+
+#### For Full Redundancy:
+```env
+# Both configured for maximum reliability
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASS=your-app-password
+RESEND_API_KEY=re_your_resend_api_key_here
+```
 
 ### Password Reset Flow
-1. User requests password reset
-2. System generates secure token
-3. Email sent with reset link
-4. Token expires after 1 hour
-5. User can reset password with valid token
+1. User requests password reset via `/api/auth/forgot-password`
+2. System generates secure JWT token (expires in 1 hour)
+3. Email sent via primary service (SMTP) or fallback (Resend)
+4. User receives email with reset link
+5. User clicks link and resets password via `/api/auth/reset-password`
+6. Token validated and password updated securely
 
 ## 🔍 External API Integration
 
@@ -313,9 +399,17 @@ Use tools like Postman, Insomnia, or Thunder Client:
 1. **Environment Variables**:
    ```env
    NODE_ENV=production
-   MONGO_URI=mongodb+srv://user:pass@cluster.mongodb.net/book-finder
+   MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/book-finder
    JWT_SECRET=your-production-secret
    CLIENT_URL=https://your-frontend-domain.com
+   
+   # Email Configuration (choose based on deployment platform)
+   EMAIL_HOST=smtp.gmail.com
+   EMAIL_PORT=587
+   EMAIL_SECURE=false
+   EMAIL_USER=your-email@gmail.com
+   EMAIL_PASS=your-app-password
+   RESEND_API_KEY=your-resend-api-key
    ```
 
 2. **Database**: Use MongoDB Atlas for production
