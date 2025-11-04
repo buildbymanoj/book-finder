@@ -100,3 +100,26 @@ export const resetPassword = async (token, password) => {
   const response = await api.post('/auth/reset-password', { token, password });
   return response.data;
 };
+
+/**
+ * Google Sign In
+ * @returns {Promise} User data with token
+ */
+export const googleSignIn = async () => {
+  // Redirect to Google OAuth
+  window.location.href = `${api.defaults.baseURL}/auth/google`;
+};
+
+/**
+ * Handle Google OAuth callback
+ * @param {String} token - JWT token from Google OAuth
+ * @returns {Promise} User data
+ */
+export const handleGoogleCallback = async (token) => {
+  // Store token
+  localStorage.setItem('token', token);
+  
+  // Get user data
+  const userData = await getCurrentUser();
+  return userData;
+};

@@ -44,7 +44,7 @@ const AppContent = ({ user, setUser, loading }) => {
     );
   }
 
-  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password');
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register' || location.pathname === '/auth' || location.pathname === '/forgot-password' || location.pathname.startsWith('/reset-password');
   const showOnlyAppName = isAuthPage || (location.pathname === '/' && !user);
 
   return (
@@ -84,6 +84,10 @@ const AppContent = ({ user, setUser, loading }) => {
             />
             <Route 
               path="/register" 
+              element={user ? <Navigate to="/" /> : <AuthPage />} 
+            />
+            <Route 
+              path="/auth" 
               element={user ? <Navigate to="/" /> : <AuthPage />} 
             />
             <Route 

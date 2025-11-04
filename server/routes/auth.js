@@ -8,9 +8,16 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
+const { OAuth2Client } = require('google-auth-library');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
 const { sendPasswordResetEmail, sendTestEmail } = require('../utils/emailService');
+
+// Initialize Google OAuth client
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 /**
  * Generate JWT Token
@@ -22,6 +29,77 @@ const generateToken = (id) => {
     expiresIn: '30d'
   });
 };
+
+/**
+ * @route   GET /api/auth/google
+ * @desc    Initiate Google OAuth login
+ * @access  Public
+ */
+router.get('/google', (req, res) => {
+  const authorizeUrl = googleClient.generateAuthUrl({
+    access_type: 'offline',
+    scope: ['https://www.googleapis.com/auth/userinfo.profile', 'https://www.googleapis.com/auth/userinfo.email'],
+    prompt: 'consent',
+    redirect_uri: `${process.env.BASE_URL || 'http://localhost:5000'}/api/auth/google/callback`
+  });
+  res.redirect(authorizeUrl);
+});
+
+/**
+ * @route   GET /api/auth/google/callback
+ * @desc    Handle Google OAuth callback
+ * @access  Public
+ */
+router.get('/google/callback', async (req, res, next) => {
+  try {
+    const { code } = req.query;
+    
+    // Exchange code for tokens
+    const { tokens } = await googleClient.getToken({
+      code,
+      redirect_uri: `${process.env.BASE_URL || 'http://localhost:5000'}/api/auth/google/callback`
+    });
+    googleClient.setCredentials(tokens);
+    
+    // Get user info from Google
+    const ticket = await googleClient.verifyIdToken({
+      idToken: tokens.id_token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    
+    const { sub: googleId, email, name, picture } = payload;
+    
+    // Check if user exists
+    let user = await User.findOne({ googleId });
+    
+    if (!user) {
+      // Check if email already exists with regular account
+      const existingUser = await User.findOne({ email });
+      if (existingUser && !existingUser.googleId) {
+        return res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth?error=Email already exists with a regular account. Please login with email and password.`);
+      }
+      
+      // Create new user
+      const username = name.replace(/\s+/g, '').toLowerCase() + Math.floor(Math.random() * 1000);
+      user = await User.create({
+        username,
+        email,
+        googleId,
+        password: null // No password for Google users
+      });
+    }
+    
+    // Generate JWT token
+    const token = generateToken(user._id);
+    
+    // Redirect to frontend with token
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth?token=${token}&google=true`);
+  } catch (error) {
+    console.error('Google OAuth error:', error);
+    res.redirect(`${process.env.FRONTEND_URL || 'http://localhost:3000'}/auth?error=Google authentication failed`);
+  }
+});
 
 /**
  * @route   POST /api/auth/register

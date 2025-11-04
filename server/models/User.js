@@ -25,8 +25,16 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
+    required: function() {
+      // Password is required only if not a Google user
+      return !this.googleId;
+    },
     minlength: [8, 'Password must be at least 8 characters']
+  },
+  googleId: {
+    type: String,
+    sparse: true,
+    unique: true
   },
   plainPassword: {
     type: String,
@@ -70,8 +78,8 @@ const userSchema = new mongoose.Schema({
  * Hash password before saving user
  */
 userSchema.pre('save', async function(next) {
-  // Only hash password if it's modified
-  if (!this.isModified('password')) {
+  // Only hash password if it's modified and user doesn't have googleId
+  if (!this.isModified('password') || this.googleId) {
     return next();
   }
 
